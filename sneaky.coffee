@@ -4,26 +4,23 @@ class (exports ? @).Sneaky
   #    2D Geometry
   # -----------------
 
-  @Vector: class Vector
+  class Vector
     constructor: (@x, @y) ->
-
-  @Point: Vector
 
   # -----------------
   #      Actors
   # -----------------
   #
   # Each frame:
-  #   1) Any key events that occured during the last frame are processed in the
-  #      order they arrived.
-  #   2) Gravity modifies the velocity.
-  #   3) The velocity modifies the position.
-  #   4) A list of collisions is compiled for every actor.
-  #   5) Each of those collision callbacks is called one after another.
+  #   1) A list of collisions is compiled for every actor.
+  #   2) Each of those collision callbacks is called in the order they were set.
   #      You can move actors around in their callbacks and the other collisions
-  #      will still safely trigger. They are called in the order they were set.
-  #      Note that if an actor is moved manually a collision event won't fire.
-  #   6) Every actor is drawn.
+  #      will still safely trigger. Callbacks are passed two vectors.
+  #   3) Every actor is drawn.
+  #   4) Any key events that occured during the last frame are processed in the
+  #      order they arrived.
+  #   5) Gravity modifies the velocity.
+  #   6) The velocity modifies the position.
 
   @Actor: class Actor
     constructor: (@position) ->
@@ -37,7 +34,7 @@ class (exports ? @).Sneaky
     onHit: (classOrInstance, callback) ->
       @collisionCallbacks.push
         classOrInstance: classOrInstance
-        callback:
+        callback: callback
 
   # -----------------
   #     Key Codes
@@ -64,12 +61,6 @@ class (exports ? @).Sneaky
 
 ###
   constructor (@width, @height): ->
-
-  # Key Codes
-  UP: 38
-  DOWN: 40
-  ESC: 27
-  SPACE: 32
 
   _ctx = null
   WIDTH = null
